@@ -1,1 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PineCliff County Roleplay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: url('https://i.imgur.com/rIIUiIC.png') no-repeat center center/cover;
+      min-height: 100vh;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* Topbar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+    }
+
+    .topbar h1 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    .topbar a {
+      padding: 10px 20px;
+      border: 2px solid cyan;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #fff;
+      transition: 0.3s;
+      background: transparent;
+    }
+
+    .topbar a:hover {
+      background: cyan;
+      color: #000;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    header, section, .buttons, .gallery, .discord-widget, .dropdowns {
+      animation: floatUp 1.5s ease forwards;
+      opacity: 0;
+    }
+
+    header {
+      margin-top: 120px;
+      animation-delay: 0.2s;
+    }
+
+    header h2 {
+      font-size: 3rem;
+      text-shadow: 0 0 15px rgba(0,255,255,0.7);
+    }
+
+    section {
+      margin: 40px auto;
+      max-width: 800px;
+      padding: 20px;
+      animation-delay: 0.5s;
+    }
+
+    section h3 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: cyan;
+    }
+
+    section p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation-delay: 0.8s;
+    }
+
+    .buttons a {
+      padding: 12px 25px;
+      border: 2px solid cyan;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+      background: transparent;
+    }
+
+    .buttons a:hover {
+      background: cyan;
+      color: #000;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    /* Dropdowns */
+    .dropdowns {
+      margin: 40px auto;
+      max-width: 800px;
+      text-align: left;
+      animation-delay: 1.2s;
+    }
+
+    details {
+      margin-bottom: 15px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid cyan;
+      border-radius: 10px;
+      padding: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    details:hover {
+      box-shadow: 0 0 15px cyan;
+    }
+
+    summary {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: cyan;
+      cursor: pointer;
+    }
+
+    details p {
+      margin-top: 10px;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #fff;
+    }
+
+    /* Gallery */
+    .gallery {
+      margin: 50px auto;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      animation-delay: 1.5s;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: 0.3s;
+      border: 2px solid rgba(0,255,255,0.5);
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px cyan;
+    }
+
+    /* Discord Widget Modal Style */
+    .discord-widget {
+      margin: 60px auto;
+      max-width: 400px;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid cyan;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0,255,255,0.5);
+      animation-delay: 1.8s;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <h1>PineCliff County RP</h1>
+    <a href="https://discord.gg/EyASGZzjFF" target="_blank">Join Discord</a>
+  </div>
+
+  <!-- Main Header -->
+  <header>
+    <h2>Welcome to PineCliff County Roleplay</h2>
+  </header>
+
+  <!-- Info Section -->
+  <section>
+    <h3>Who We Are</h3>
+    <p>
+      PineCliff County Roleplay is a professional Brick Rigs community focused on realistic and fun roleplay experiences. 
+      We value immersion, teamwork, and fair play.
+    </p>
+    <h3>What We Offer</h3>
+    <p>
+      Our server features whitelisted law enforcement, civilian roleplay, emergency services, custom scenarios, and 
+      a friendly community atmosphere where everyone can enjoy structured RP sessions.
+    </p>
+  </section>
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <a href="https://discord.gg/EyASGZzjFF" target="_blank">Discord Server</a>
+    <a href="https://forms.gle/sni55d676WF5njBP7" target="_blank">Civilian Whitelist Application</a>
+  </div>
+
+  <!-- Dropdowns -->
+<!--  <div class="dropdowns">
+    <details>
+      <summary>📜 Server Rules</summary>
+      <p>1. Respect all players and staff.<br>
+         2. No Fail Roleplay (FRP).<br>
+         3. Follow traffic and RP laws.<br>
+         4. No random deathmatching (RDM) or griefing.<br>
+         5. Keep language professional.<br>
+         6. Listen to staff decisions.</p>
+    </details>
+
+    <details>
+      <summary>🚓 Roleplay Guidelines</summary>
+      <p>- All vehicles must be registered.<br>
+         - Valid driver's license required.<br>
+         - Police chases need staff approval.<br>
+         - Major RP events require permission.<br>
+         - Peacetime (PT) always active unless otherwise announced.</p>
+    </details>
+
+    <details>
+      <summary>📝 Applications & Whitelist Info</summary>
+      <p>You must complete a Whitelist Application to access law enforcement or emergency services roles.  
+      Civilian License Applications are required to legally drive in sessions.  
+      All forms are reviewed by staff within 24–48 hours.</p>
+    </details>
+
+    <details>
+      <summary>📩 Support & Contact</summary>
+      <p>If you encounter issues, open a ticket in the Support channel on Discord.  
+      Staff are available to help with rules, RP guidance, and technical issues.</p>
+    </details>
+  </div> -->
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <img src="https://i.imgur.com/BKM3n53.png" alt="RP Scene 1">
+    <img src="https://i.imgur.com/eAZWqEz.png" alt="RP Scene 2">
+    <img src="https://i.imgur.com/nNeCPkx.jpeg" alt="RP Scene 3">
+    <img src="https://i.imgur.com/8iWbbRM.png" alt="RP Scene 4">
+  </div>
+
+  <!-- Discord Widget -->
+  <div class="discord-widget">
+    <iframe src="https://discord.com/widget?id=1304599908007022613&theme=dark" 
+      width="350" height="500" allowtransparency="true" frameborder="0" 
+      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+  </div>
+</body>
+</html>
