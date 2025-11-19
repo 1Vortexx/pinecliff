@@ -3,287 +3,1824 @@
 <head>
   <link rel="icon" href="https://i.imgur.com/65b34Dv.png" type="image/x-icon">
   <meta charset="UTF-8">
-  <title>PineCliff County Roleplay</title>
+  <title>PineCliff County Roleplay | Professional Brick Rigs RP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
+    :root {
+      --primary-color: #00ff41;
+      --secondary-color: #00cc33;
+      --accent-color: #0a0a0a;
+      --bg-dark: #000000;
+      --bg-card: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border-color: #00ff41;
+    }
+
+    /* Theme Variables */
+    [data-theme="cyan"] {
+      --primary-color: #00ffff;
+      --secondary-color: #00cccc;
+      --border-color: #00ffff;
+    }
+
+    [data-theme="purple"] {
+      --primary-color: #b366ff;
+      --secondary-color: #9933ff;
+      --border-color: #b366ff;
+    }
+
+    [data-theme="red"] {
+      --primary-color: #ff3333;
+      --secondary-color: #cc0000;
+      --border-color: #ff3333;
+    }
+
+    [data-theme="gold"] {
+      --primary-color: #ffd700;
+      --secondary-color: #ffaa00;
+      --border-color: #ffd700;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background: url('https://i.imgur.com/rIIUiIC.png') no-repeat center center/cover;
-      min-height: 100vh;
-      color: #fff;
-      text-align: center;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* Topbar */
-    .topbar {
+    /* Animated Background */
+    .bg-animation {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.03;
+      background: 
+        linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%),
+        linear-gradient(0deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+      background-size: 50px 50px;
+      animation: bgMove 20s linear infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 50px 50px, 50px 50px; }
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--primary-color);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    nav .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 40px;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
     }
 
-    .topbar h1 {
-      font-size: 1.8rem;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
       font-weight: bold;
-      color: #fff;
-      text-shadow: 0 0 10px cyan;
+      color: var(--primary-color);
+      text-shadow: 0 0 20px var(--primary-color);
     }
 
-    .topbar a {
-      padding: 10px 20px;
-      border: 2px solid cyan;
-      border-radius: 25px;
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-color);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .settings-btn {
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .settings-btn:hover {
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    /* Notification Bell */
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .notification-bell i {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      transition: all 0.3s;
+    }
+
+    .notification-bell:hover i {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 10px var(--primary-color));
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #ff3333;
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 50%;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 70px;
+      right: 100px;
+      background: var(--bg-card);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      min-width: 350px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .notification-dropdown.active {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification-item {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+      margin-bottom: 1rem;
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .notification-item h4 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .notification-item p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+
+    .notification-item .btn {
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Staff Alert Banner */
+    .staff-alert {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(0, 255, 65, 0.15), rgba(0, 255, 65, 0.05));
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 999;
+      animation: slideDown 0.5s ease, glow 2s infinite;
+      backdrop-filter: blur(10px);
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.6); }
+    }
+
+    .staff-alert i {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+
+    .staff-alert span {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .staff-alert a {
+      color: var(--primary-color);
       text-decoration: none;
       font-weight: bold;
-      color: #fff;
-      transition: 0.3s;
+      margin-left: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .staff-alert a:hover {
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .close-alert {
       background: transparent;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 1rem;
+      transition: all 0.3s;
     }
 
-    .topbar a:hover {
-      background: cyan;
-      color: #000;
-      box-shadow: 0 0 20px cyan;
+    .close-alert:hover {
+      transform: rotate(90deg);
+      color: var(--secondary-color);
     }
 
-    header, section, .buttons, .gallery, .discord-widget, .dropdowns {
-      animation: floatUp 1.5s ease forwards;
-      opacity: 0;
-    }
-
-    header {
-      margin-top: 120px;
-      animation-delay: 0.2s;
-    }
-
-    header h2 {
-      font-size: 3rem;
-      text-shadow: 0 0 15px rgba(0,255,255,0.7);
-    }
-
-    section {
-      margin: 40px auto;
-      max-width: 800px;
-      padding: 20px;
-      animation-delay: 0.5s;
-    }
-
-    section h3 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      color: cyan;
-    }
-
-    section p {
-      font-size: 1.1rem;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .buttons {
-      margin-top: 20px;
+    /* Hero Section */
+    .hero {
+      margin-top: 80px;
+      min-height: 90vh;
       display: flex;
-      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)),
+                  url('https://i.imgur.com/rIIUiIC.png') center/cover;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
       justify-content: center;
       flex-wrap: wrap;
-      animation-delay: 0.8s;
     }
 
-    .buttons a {
-      padding: 12px 25px;
-      border: 2px solid cyan;
-      border-radius: 30px;
-      color: #fff;
-      font-weight: bold;
+    .btn {
+      padding: 1rem 2.5rem;
       text-decoration: none;
-      transition: 0.3s;
-      background: transparent;
-    }
-
-    .buttons a:hover {
-      background: cyan;
-      color: #000;
-      box-shadow: 0 0 20px cyan;
-    }
-
-    /* Dropdowns */
-    .dropdowns {
-      margin: 40px auto;
-      max-width: 800px;
-      text-align: left;
-      animation-delay: 1.2s;
-    }
-
-    details {
-      margin-bottom: 15px;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid cyan;
-      border-radius: 10px;
-      padding: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    details:hover {
-      box-shadow: 0 0 15px cyan;
-    }
-
-    summary {
-      font-size: 1.3rem;
+      border-radius: 8px;
       font-weight: bold;
-      color: cyan;
-      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    details p {
-      margin-top: 10px;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #fff;
+    .btn-primary {
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--primary-color);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      box-shadow: 0 10px 30px var(--primary-color);
+    }
+
+    /* Stats Section */
+    .stats {
+      background: var(--bg-card);
+      padding: 4rem 2rem;
+      border-top: 2px solid var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .stats .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 255, 65, 0.05);
+      border: 1px solid var(--primary-color);
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 40px rgba(0, 255, 65, 0.3);
+    }
+
+    .stat-item i {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .stat-item h3 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-item p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 5rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    section h2 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--primary-color);
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border: 1px solid var(--primary-color);
+      border-radius: 15px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .feature-card:hover::before {
+      left: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 50px rgba(0, 255, 65, 0.3);
+      border-color: var(--secondary-color);
+    }
+
+    .feature-card i {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Departments Section */
+    .departments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .dept-card {
+      background: linear-gradient(135deg, var(--bg-card), rgba(0, 255, 65, 0.05));
+      padding: 2rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 15px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .dept-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0, 255, 65, 0.5);
+    }
+
+    .dept-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .dept-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .dept-card p {
+      color: var(--text-secondary);
     }
 
     /* Gallery */
-    .gallery {
-      margin: 50px auto;
-      max-width: 1000px;
+    .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      animation-delay: 1.5s;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
     }
 
-    .gallery img {
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      border: 2px solid var(--primary-color);
+      aspect-ratio: 16/9;
+    }
+
+    .gallery-item img {
       width: 100%;
-      height: 200px;
+      height: 100%;
       object-fit: cover;
-      border-radius: 15px;
-      transition: 0.3s;
-      border: 2px solid rgba(0,255,255,0.5);
+      transition: transform 0.5s;
     }
 
-    .gallery img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px cyan;
+    .gallery-item:hover img {
+      transform: scale(1.1);
     }
 
-    /* Discord Widget Modal Style */
-    .discord-widget {
-      margin: 60px auto;
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+
+    /* Discord Section */
+    .discord-section {
+      background: var(--bg-card);
+      padding: 5rem 2rem;
+      text-align: center;
+      border-top: 2px solid var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .discord-widget-container {
       max-width: 400px;
-      padding: 20px;
-      background: rgba(0,0,0,0.6);
-      border: 2px solid cyan;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--primary-color);
       border-radius: 15px;
-      box-shadow: 0 0 25px rgba(0,255,255,0.5);
-      animation-delay: 1.8s;
+      box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
     }
 
-    @keyframes floatUp {
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      border-top: 2px solid var(--primary-color);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .footer-links a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .footer-links a:hover {
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    /* Settings Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, var(--bg-card), rgba(0, 0, 0, 0.9));
+      padding: 0;
+      border-radius: 20px;
+      border: 2px solid var(--primary-color);
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 50px rgba(0, 255, 65, 0.5);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
       from {
-        transform: translateY(50px);
+        transform: scale(0.9);
         opacity: 0;
       }
       to {
-        transform: translateY(0);
+        transform: scale(1);
         opacity: 1;
       }
     }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem;
+      border-bottom: 2px solid var(--primary-color);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header h2 {
+      color: var(--primary-color);
+      margin-bottom: 0;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .modal-header h2::after {
+      display: none;
+    }
+
+    .close-modal {
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      transform: rotate(90deg);
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .modal-body {
+      padding: 3rem;
+    }
+
+    .settings-section {
+      margin-bottom: 3rem;
+    }
+
+    .settings-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-section h3 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .settings-section p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .theme-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .theme-option {
+      padding: 1.2rem;
+      border: 2px solid rgba(0, 255, 65, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .theme-option:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 30px rgba(0, 255, 65, 0.3);
+    }
+
+    .theme-option.active {
+      border-color: var(--primary-color);
+      background: rgba(0, 255, 65, 0.1);
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+    }
+
+    .theme-option.active::after {
+      content: '✓';
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .theme-preview {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      border: 3px solid var(--primary-color);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .theme-green .theme-preview { background: linear-gradient(135deg, #00ff41, #00cc33); }
+    .theme-cyan .theme-preview { background: linear-gradient(135deg, #00ffff, #00cccc); }
+    .theme-purple .theme-preview { background: linear-gradient(135deg, #b366ff, #9933ff); }
+    .theme-red .theme-preview { background: linear-gradient(135deg, #ff3333, #cc0000); }
+    .theme-gold .theme-preview { background: linear-gradient(135deg, #ffd700, #ffaa00); }
+
+    .theme-option h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+    }
+
+    .theme-option p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Toggle Switch */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 255, 65, 0.2);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+    }
+
+    .toggle-container:hover {
+      border-color: var(--primary-color);
+      background: rgba(0, 255, 65, 0.05);
+    }
+
+    .toggle-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .toggle-label strong {
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    .toggle-label span {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .toggle-switch.active {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .toggle-switch.active .toggle-slider {
+      left: 32px;
+    }
+
+    /* Dropdown Select */
+    .select-container {
+      margin-bottom: 1rem;
+    }
+
+    .select-container label {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .custom-select {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 255, 65, 0.3);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .custom-select:hover,
+    .custom-select:focus {
+      border-color: var(--primary-color);
+      background: rgba(0, 255, 65, 0.05);
+      outline: none;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+    }
+
+    .custom-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    /* Range Slider */
+    .range-container {
+      margin-bottom: 1rem;
+    }
+
+    .range-container label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .range-value {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .custom-range {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      outline: none;
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .custom-range::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--primary-color);
+      transition: all 0.3s;
+    }
+
+    .custom-range::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .custom-range::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeInUp 0.8s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .nav-links {
+        gap: 0.8rem;
+        font-size: 0.85rem;
+      }
+
+      .logo {
+        font-size: 1.2rem;
+      }
+
+      .logo i {
+        font-size: 1.5rem;
+      }
+
+      nav .container {
+        padding: 0 1rem;
+      }
+
+      section h2 {
+        font-size: 2rem;
+      }
+
+      .features-grid,
+      .departments-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .theme-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-content {
+        width: 95%;
+        max-height: 95vh;
+      }
+
+      .modal-header {
+        padding: 1.5rem;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      .staff-alert {
+        top: 70px;
+        left: 1rem;
+        right: 1rem;
+        transform: none;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .notification-dropdown {
+        right: 1rem;
+        left: 1rem;
+        min-width: auto;
+      }
+
+      .notification-bell {
+        padding: 0.3rem;
+      }
+
+      .settings-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* High Contrast Mode */
+    .high-contrast {
+      --primary-color: #00ff00;
+      --secondary-color: #00cc00;
+      --text-secondary: #cccccc;
+    }
+
+    .high-contrast .feature-card,
+    .high-contrast .dept-card,
+    .high-contrast .toggle-container {
+      border-width: 3px;
+    }
   </style>
 </head>
-<body>
-  <!-- Topbar -->
-  <div class="topbar">
-    <h1>PineCliff County RP</h1>
-    <a href="https://discord.gg/EyASGZzjFF" target="_blank">Join Discord</a>
+<body data-theme="green">
+  <div class="bg-animation"></div>
+
+  <!-- Staff Alert Banner -->
+  <div class="staff-alert" id="staffAlert">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>We're hiring! <a href="https://forms.gle/bZLpWkjbRrpBrMP67" target="_blank">Apply for Staff →</a></span>
+    <button class="close-alert" onclick="closeStaffAlert()">×</button>
   </div>
 
-  <!-- Main Header -->
-  <header>
-    <h2>Welcome to PineCliff County Roleplay</h2>
-  </header>
+  <!-- Notification Dropdown -->
+  <div class="notification-dropdown" id="notificationDropdown">
+    <div class="notification-item">
+      <h4><i class="fas fa-user-tie"></i> Staff Applications Open!</h4>
+      <p>We're currently looking for active, dedicated staff members to join our team. Help us build and moderate the PineCliff County community!</p>
+      <a href="https://forms.gle/bZLpWkjbRrpBrMP67" target="_blank" class="btn btn-primary">
+        <i class="fas fa-file-alt"></i> Apply Now
+      </a>
+    </div>
+  </div>
 
-  <!-- Info Section -->
-  <section>
-    <h3>Who We Are</h3>
-    <p>
-      PineCliff County Roleplay is a professional Brick Rigs community focused on realistic and fun roleplay experiences. 
-      We value immersion, teamwork, and fair play.
-    </p>
-    <h3>What We Offer</h3>
-    <p>
-      Our server features whitelisted law enforcement, civilian roleplay, emergency services, custom scenarios, and 
-      a friendly community atmosphere where everyone can enjoy structured RP sessions.
-    </p>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-mountain"></i>
+        <span>PineCliff County RP</span>
+      </div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#departments">Departments</a>
+        <a href="#features">Features</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#join">Join Us</a>
+        <div class="notification-bell" onclick="toggleNotifications()">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">1</span>
+        </div>
+        <button class="settings-btn" onclick="openSettings()">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>PineCliff County Roleplay</h1>
+      <p>Experience the most professional and immersive Brick Rigs roleplay community. Join our thriving server in PineCliff County, Colorado.</p>
+      <div class="cta-buttons">
+        <a href="https://discord.gg/EyASGZzjFF" target="_blank" class="btn btn-primary">
+          <i class="fab fa-discord"></i> Join Discord
+        </a>
+        <a href="https://forms.gle/sni55d676WF5njBP7" target="_blank" class="btn btn-secondary">
+          <i class="fas fa-file-alt"></i> Apply Now
+        </a>
+      </div>
+    </div>
   </section>
 
-  <!-- Buttons -->
-  <div class="buttons">
-    <a href="https://discord.gg/EyASGZzjFF" target="_blank">Discord Server</a>
-    <a href="https://forms.gle/sni55d676WF5njBP7" target="_blank">Civilian Whitelist Application</a>
+  <!-- Stats Section -->
+  <div class="stats">
+    <div class="container">
+      <div class="stat-item fade-in">
+        <i class="fas fa-users"></i>
+        <h3>500+</h3>
+        <p>Active Members</p>
+      </div>
+      <div class="stat-item fade-in">
+        <i class="fas fa-calendar-check"></i>
+        <h3>Daily</h3>
+        <p>Roleplay Sessions</p>
+      </div>
+      <div class="stat-item fade-in">
+        <i class="fas fa-star"></i>
+        <h3>Premium</h3>
+        <p>RP Experience</p>
+      </div>
+      <div class="stat-item fade-in">
+        <i class="fas fa-building"></i>
+        <h3>8+</h3>
+        <p>Departments</p>
+      </div>
+    </div>
   </div>
 
-  <!-- Dropdowns -->
-<!--  <div class="dropdowns">
-    <details>
-      <summary>📜 Server Rules</summary>
-      <p>1. Respect all players and staff.<br>
-         2. No Fail Roleplay (FRP).<br>
-         3. Follow traffic and RP laws.<br>
-         4. No random deathmatching (RDM) or griefing.<br>
-         5. Keep language professional.<br>
-         6. Listen to staff decisions.</p>
-    </details>
+  <!-- About Section -->
+  <section id="about">
+    <h2>About PineCliff County</h2>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <i class="fas fa-map-marked-alt"></i>
+        <h3>Realistic Location</h3>
+        <p>Set in the beautiful PineCliff County, Colorado, our server offers a detailed and immersive map that brings the Rocky Mountain region to life in Brick Rigs.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-users-cog"></i>
+        <h3>Professional Community</h3>
+        <p>Our community is built on respect, professionalism, and dedication to quality roleplay. We maintain high standards and foster a welcoming environment for all players.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-headset"></i>
+        <h3>Active Staff Team</h3>
+        <p>Our experienced and dedicated staff team is available around the clock to ensure smooth operations, handle support requests, and create engaging roleplay scenarios.</p>
+      </div>
+    </div>
+  </section>
 
-    <details>
-      <summary>🚓 Roleplay Guidelines</summary>
-      <p>- All vehicles must be registered.<br>
-         - Valid driver's license required.<br>
-         - Police chases need staff approval.<br>
-         - Major RP events require permission.<br>
-         - Peacetime (PT) always active unless otherwise announced.</p>
-    </details>
+  <!-- Departments Section -->
+  <section id="departments">
+    <h2>Our Departments</h2>
+    <div class="departments-grid">
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🚓</div>
+        <h3>Police Department</h3>
+        <p>Maintain law and order across PineCliff County with professional policing standards</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🚒</div>
+        <h3>Fire & Rescue</h3>
+        <p>Respond to emergencies and save lives as part of our elite fire service</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🚑</div>
+        <h3>EMS Services</h3>
+        <p>Provide critical medical care and emergency response throughout the county</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🏛️</div>
+        <h3>Sheriff's Office</h3>
+        <p>Patrol the rural areas and maintain peace in the countryside</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🚁</div>
+        <h3>Air Support</h3>
+        <p>Aerial surveillance and rapid response from our helicopter division</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">👔</div>
+        <h3>Civilian Division</h3>
+        <p>Live your life as a civilian, run businesses, or pursue various careers</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">🚧</div>
+        <h3>DOT Services</h3>
+        <p>Maintain roads and infrastructure across PineCliff County</p>
+      </div>
+      <div class="dept-card fade-in">
+        <div class="dept-icon">⚖️</div>
+        <h3>Judicial System</h3>
+        <p>Ensure justice through our comprehensive legal framework</p>
+      </div>
+    </div>
+  </section>
 
-    <details>
-      <summary>📝 Applications & Whitelist Info</summary>
-      <p>You must complete a Whitelist Application to access law enforcement or emergency services roles.  
-      Civilian License Applications are required to legally drive in sessions.  
-      All forms are reviewed by staff within 24–48 hours.</p>
-    </details>
+  <!-- Features Section -->
+  <section id="features">
+    <h2>Server Features</h2>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <i class="fas fa-check-circle"></i>
+        <h3>Whitelist System</h3>
+        <p>Our selective whitelist ensures quality roleplay and maintains community standards. Apply through our streamlined application process.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-car"></i>
+        <h3>Custom Vehicles</h3>
+        <p>Extensive collection of realistic vehicles including police cruisers, fire trucks, ambulances, and civilian vehicles.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-scroll"></i>
+        <h3>Realistic Laws</h3>
+        <p>Comprehensive legal system based on real-world Colorado laws, adapted for engaging gameplay and realistic scenarios.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-calendar-alt"></i>
+        <h3>Regular Events</h3>
+        <p>Participate in scheduled roleplay sessions, training exercises, community events, and special scenarios.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-graduation-cap"></i>
+        <h3>Training Programs</h3>
+        <p>Comprehensive training for all departments with certification systems and ongoing development opportunities.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <i class="fas fa-handshake"></i>
+        <h3>Community Focus</h3>
+        <p>Active Discord community with dedicated channels, voice rooms, and social events beyond the game.</p>
+      </div>
+    </div>
+  </section>
 
-    <details>
-      <summary>📩 Support & Contact</summary>
-      <p>If you encounter issues, open a ticket in the Support channel on Discord.  
-      Staff are available to help with rules, RP guidance, and technical issues.</p>
-    </details>
-  </div> -->
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <h2>Server Gallery</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item fade-in">
+        <img src="https://i.imgur.com/BKM3n53.png" alt="Police Patrol">
+      </div>
+      <div class="gallery-item fade-in">
+        <img src="https://i.imgur.com/eAZWqEz.png" alt="Fire Response">
+      </div>
+      <div class="gallery-item fade-in">
+        <img src="https://i.imgur.com/nNeCPkx.jpeg" alt="EMS Operation">
+      </div>
+      <div class="gallery-item fade-in">
+        <img src="https://i.imgur.com/8iWbbRM.png" alt="Traffic Stop">
+      </div>
+    </div>
+  </section>
 
-  <!-- Gallery -->
-  <div class="gallery">
-    <img src="https://i.imgur.com/BKM3n53.png" alt="RP Scene 1">
-    <img src="https://i.imgur.com/eAZWqEz.png" alt="RP Scene 2">
-    <img src="https://i.imgur.com/nNeCPkx.jpeg" alt="RP Scene 3">
-    <img src="https://i.imgur.com/8iWbbRM.png" alt="RP Scene 4">
+  <!-- Discord Section -->
+  <section id="join" class="discord-section">
+    <h2>Join Our Community</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; font-size: 1.2rem; color: var(--text-secondary);">
+      Ready to start your journey in PineCliff County? Join our Discord server to get started, meet the community, and begin your application process.
+    </p>
+    <div class="discord-widget-container">
+      <iframe src="https://discord.com/widget?id=1304599908007022613&theme=dark" 
+        width="100%" height="500" allowtransparency="true" frameborder="0" 
+        sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </div>
+    <div class="cta-buttons" style="margin-top: 2rem;">
+      <a href="https://discord.gg/EyASGZzjFF" target="_blank" class="btn btn-primary">
+        <i class="fab fa-discord"></i> Join Discord Server
+      </a>
+      <a href="https://forms.gle/sni55d676WF5njBP7" target="_blank" class="btn btn-secondary">
+        <i class="fas fa-file-alt"></i> Submit Whitelist Application
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 PineCliff County Roleplay. All rights reserved.</p>
+    <p>Professional Brick Rigs Roleplay Community</p>
+    <div class="footer-links">
+      <a href="https://discord.gg/EyASGZzjFF" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+      <a href="#"><i class="fas fa-book"></i> Rules</a>
+      <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+  </footer>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-cog"></i> Settings</h2>
+        <button class="close-modal" onclick="closeSettings()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Theme Settings -->
+        <div class="settings-section">
+          <h3><i class="fas fa-palette"></i> Theme Customization</h3>
+          <p>Choose your preferred color theme to personalize your browsing experience</p>
+          <div class="theme-options">
+            <div class="theme-option theme-green active" onclick="setTheme('green')">
+              <div class="theme-preview"></div>
+              <h4>Matrix Green</h4>
+              <p>Default Theme</p>
+            </div>
+            <div class="theme-option theme-cyan" onclick="setTheme('cyan')">
+              <div class="theme-preview"></div>
+              <h4>Cyber Cyan</h4>
+              <p>Cool & Tech</p>
+            </div>
+            <div class="theme-option theme-purple" onclick="setTheme('purple')">
+              <div class="theme-preview"></div>
+              <h4>Royal Purple</h4>
+              <p>Elite & Premium</p>
+            </div>
+            <div class="theme-option theme-red" onclick="setTheme('red')">
+              <div class="theme-preview"></div>
+              <h4>Emergency Red</h4>
+              <p>Bold & Intense</p>
+            </div>
+            <div class="theme-option theme-gold" onclick="setTheme('gold')">
+              <div class="theme-preview"></div>
+              <h4>Luxury Gold</h4>
+              <p>Premium & Elegant</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Settings -->
+        <div class="settings-section">
+          <h3><i class="fas fa-desktop"></i> Display Settings</h3>
+          <p>Customize your viewing experience</p>
+          
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Animations</strong>
+              <span>Enable smooth animations and transitions</span>
+            </div>
+            <div class="toggle-switch active" id="animationsToggle" onclick="toggleAnimations()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Reduced Motion</strong>
+              <span>Minimize motion effects for accessibility</span>
+            </div>
+            <div class="toggle-switch" id="reducedMotionToggle" onclick="toggleReducedMotion()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div class="range-container">
+            <label>
+              <span>Background Animation Speed</span>
+              <span class="range-value" id="bgSpeedValue">Normal</span>
+            </label>
+            <input type="range" class="custom-range" min="1" max="3" value="2" id="bgSpeedRange" oninput="updateBgSpeed(this.value)">
+          </div>
+        </div>
+
+        <!-- Accessibility Settings -->
+        <div class="settings-section">
+          <h3><i class="fas fa-universal-access"></i> Accessibility</h3>
+          <p>Adjust settings for better accessibility</p>
+          
+          <div class="select-container">
+            <label>Font Size</label>
+            <select class="custom-select" id="fontSizeSelect" onchange="updateFontSize(this.value)">
+              <option value="small">Small</option>
+              <option value="medium" selected>Medium (Default)</option>
+              <option value="large">Large</option>
+              <option value="xlarge">Extra Large</option>
+            </select>
+          </div>
+
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>High Contrast Mode</strong>
+              <span>Increase color contrast for better readability</span>
+            </div>
+            <div class="toggle-switch" id="contrastToggle" onclick="toggleHighContrast()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-section">
+          <h3><i class="fas fa-bell"></i> Notifications</h3>
+          <p>Manage your notification preferences</p>
+          
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Staff Updates</strong>
+              <span>Receive updates about staff applications and opportunities</span>
+            </div>
+            <div class="toggle-switch active" id="staffNotifToggle" onclick="toggleStaffNotifications()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Event Announcements</strong>
+              <span>Get notified about upcoming events and sessions</span>
+            </div>
+            <div class="toggle-switch active" id="eventNotifToggle" onclick="toggleEventNotifications()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Show Alert Banner</strong>
+              <span>Display important announcements at the top of the page</span>
+            </div>
+            <div class="toggle-switch active" id="bannerToggle" onclick="toggleAlertBanner()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+          <h3><i class="fas fa-shield-alt"></i> Privacy & Data</h3>
+          <p>Control your data and privacy preferences</p>
+          
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <strong>Save Preferences</strong>
+              <span>Remember your settings for future visits</span>
+            </div>
+            <div class="toggle-switch active" id="savePrefsToggle" onclick="toggleSavePreferences()">
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button class="btn btn-secondary" onclick="resetSettings()" style="width: 100%;">
+              <i class="fas fa-undo"></i> Reset All Settings to Default
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Discord Widget -->
-  <div class="discord-widget">
-    <iframe src="https://discord.com/widget?id=1304599908007022613&theme=dark" 
-      width="350" height="500" allowtransparency="true" frameborder="0" 
-      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-  </div>
+  <script>
+    // Settings Modal Functions
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('theme', theme);
+      }
+      
+      // Update active state
+      document.querySelectorAll('.theme-option').forEach(opt => {
+        opt.classList.remove('active');
+      });
+      document.querySelector(`.theme-${theme}`).classList.add('active');
+    }
+
+    // Notification Functions
+    function toggleNotifications() {
+      const dropdown = document.getElementById('notificationDropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    function closeStaffAlert() {
+      const alert = document.getElementById('staffAlert');
+      alert.style.display = 'none';
+      localStorage.setItem('staffAlertClosed', 'true');
+    }
+
+    // Display Settings
+    function toggleAnimations() {
+      const toggle = document.getElementById('animationsToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      if (!enabled) {
+        document.documentElement.style.setProperty('--animation-duration', '0s');
+      } else {
+        document.documentElement.style.setProperty('--animation-duration', '1s');
+      }
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('animations', enabled);
+      }
+    }
+
+    function toggleReducedMotion() {
+      const toggle = document.getElementById('reducedMotionToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      if (enabled) {
+        document.body.style.setProperty('--animation-speed', '0.3s');
+      } else {
+        document.body.style.setProperty('--animation-speed', '1s');
+      }
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('reducedMotion', enabled);
+      }
+    }
+
+    function updateBgSpeed(value) {
+      const speeds = ['Slow', 'Normal', 'Fast'];
+      const durations = ['30s', '20s', '10s'];
+      document.getElementById('bgSpeedValue').textContent = speeds[value - 1];
+      
+      const bgAnimation = document.querySelector('.bg-animation');
+      if (bgAnimation) {
+        bgAnimation.style.animationDuration = durations[value - 1];
+      }
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('bgSpeed', value);
+      }
+    }
+
+    // Accessibility Settings
+    function updateFontSize(size) {
+      const sizes = {
+        small: '14px',
+        medium: '16px',
+        large: '18px',
+        xlarge: '20px'
+      };
+      document.documentElement.style.fontSize = sizes[size];
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('fontSize', size);
+      }
+    }
+
+    function toggleHighContrast() {
+      const toggle = document.getElementById('contrastToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      if (enabled) {
+        document.body.classList.add('high-contrast');
+      } else {
+        document.body.classList.remove('high-contrast');
+      }
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('highContrast', enabled);
+      }
+    }
+
+    // Notification Settings
+    function toggleStaffNotifications() {
+      const toggle = document.getElementById('staffNotifToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('staffNotifications', enabled);
+      }
+    }
+
+    function toggleEventNotifications() {
+      const toggle = document.getElementById('eventNotifToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('eventNotifications', enabled);
+      }
+    }
+
+    function toggleAlertBanner() {
+      const toggle = document.getElementById('bannerToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      const banner = document.getElementById('staffAlert');
+      
+      if (enabled && localStorage.getItem('staffAlertClosed') !== 'true') {
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+      
+      if (localStorage.getItem('savePreferences') !== 'false') {
+        localStorage.setItem('showBanner', enabled);
+      }
+    }
+
+    // Privacy Settings
+    function toggleSavePreferences() {
+      const toggle = document.getElementById('savePrefsToggle');
+      toggle.classList.toggle('active');
+      const enabled = toggle.classList.contains('active');
+      
+      localStorage.setItem('savePreferences', enabled);
+      
+      if (!enabled) {
+        // Clear all saved preferences except this one
+        const saveState = localStorage.getItem('savePreferences');
+        localStorage.clear();
+        localStorage.setItem('savePreferences', saveState);
+      }
+    }
+
+    function resetSettings() {
+      if (confirm('Are you sure you want to reset all settings to default? This action cannot be undone.')) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+
+    // Load saved settings on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Load theme
+      const savedTheme = localStorage.getItem('theme') || 'green';
+      setTheme(savedTheme);
+
+      // Load staff alert state
+      if (localStorage.getItem('staffAlertClosed') === 'true' || 
+          localStorage.getItem('showBanner') === 'false') {
+        document.getElementById('staffAlert').style.display = 'none';
+      }
+
+      // Load font size
+      const fontSize = localStorage.getItem('fontSize');
+      if (fontSize) {
+        updateFontSize(fontSize);
+        document.getElementById('fontSizeSelect').value = fontSize;
+      }
+
+      // Load background speed
+      const bgSpeed = localStorage.getItem('bgSpeed');
+      if (bgSpeed) {
+        document.getElementById('bgSpeedRange').value = bgSpeed;
+        updateBgSpeed(bgSpeed);
+      }
+
+      // Load toggle states
+      const animations = localStorage.getItem('animations');
+      if (animations === 'false') {
+        document.getElementById('animationsToggle').classList.remove('active');
+        document.documentElement.style.setProperty('--animation-duration', '0s');
+      }
+
+      const reducedMotion = localStorage.getItem('reducedMotion');
+      if (reducedMotion === 'true') {
+        document.getElementById('reducedMotionToggle').classList.add('active');
+        document.body.style.setProperty('--animation-speed', '0.3s');
+      }
+
+      const highContrast = localStorage.getItem('highContrast');
+      if (highContrast === 'true') {
+        document.getElementById('contrastToggle').classList.add('active');
+        document.body.classList.add('high-contrast');
+      }
+
+      const staffNotif = localStorage.getItem('staffNotifications');
+      if (staffNotif === 'false') {
+        document.getElementById('staffNotifToggle').classList.remove('active');
+      }
+
+      const eventNotif = localStorage.getItem('eventNotifications');
+      if (eventNotif === 'false') {
+        document.getElementById('eventNotifToggle').classList.remove('active');
+      }
+
+      const showBanner = localStorage.getItem('showBanner');
+      if (showBanner === 'false') {
+        document.getElementById('bannerToggle').classList.remove('active');
+      }
+
+      const savePrefs = localStorage.getItem('savePreferences');
+      if (savePrefs === 'false') {
+        document.getElementById('savePrefsToggle').classList.remove('active');
+      }
+    });
+
+    // Close modal and dropdown on outside click
+    document.getElementById('settingsModal').addEventListener('click', (e) => {
+      if (e.target.id === 'settingsModal') {
+        closeSettings();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('notificationDropdown');
+      const bell = document.querySelector('.notification-bell');
+      
+      if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    // Fade in animations on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(50px)';
+      el.style.transition = 'all 0.8s ease';
+      observer.observe(el);
+    });
+
+    // Smooth scroll offset for fixed nav
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const offset = 120; // Adjusted for staff alert banner
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
