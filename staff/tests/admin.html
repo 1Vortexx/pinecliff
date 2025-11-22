@@ -648,17 +648,27 @@
                     <p><strong>Time Taken:</strong> ${timeTaken}</p>
                     <p><strong>Submitted:</strong> ${new Date(response.submitted_at).toLocaleString()}</p>
                 </div>
-                <h3>Answers:</h3>
+                <h3>Detailed Answers:</h3>
             `;
 
             const answers = response.answers;
             for (const [questionNum, answer] of Object.entries(answers)) {
                 const isCorrect = answer.isCorrect;
+                const selectedLetter = answer.selected;
+                const correctLetter = answer.correct;
+                
                 html += `
                     <div class="answer-item ${isCorrect ? 'correct' : 'incorrect'}">
-                        <strong>Q${questionNum}:</strong> ${answer.question}<br>
-                        <strong>Selected:</strong> ${answer.selected} ${isCorrect ? '✓' : '✗'}<br>
-                        ${!isCorrect ? `<strong>Correct Answer:</strong> ${answer.correct}<br>` : ''}
+                        <strong>Question ${questionNum}:</strong> ${answer.question}<br><br>
+                        
+                        <strong>Available Options:</strong><br>
+                        ${answer.option_a ? `<span style="margin-left: 15px; display: block; margin-top: 5px;">A) ${answer.option_a} ${selectedLetter === 'A' ? '<strong>(Selected)</strong>' : ''} ${correctLetter === 'A' ? '<strong style="color: #28a745;">(Correct Answer)</strong>' : ''}</span>` : ''}
+                        ${answer.option_b ? `<span style="margin-left: 15px; display: block; margin-top: 5px;">B) ${answer.option_b} ${selectedLetter === 'B' ? '<strong>(Selected)</strong>' : ''} ${correctLetter === 'B' ? '<strong style="color: #28a745;">(Correct Answer)</strong>' : ''}</span>` : ''}
+                        ${answer.option_c ? `<span style="margin-left: 15px; display: block; margin-top: 5px;">C) ${answer.option_c} ${selectedLetter === 'C' ? '<strong>(Selected)</strong>' : ''} ${correctLetter === 'C' ? '<strong style="color: #28a745;">(Correct Answer)</strong>' : ''}</span>` : ''}
+                        ${answer.option_d ? `<span style="margin-left: 15px; display: block; margin-top: 5px;">D) ${answer.option_d} ${selectedLetter === 'D' ? '<strong>(Selected)</strong>' : ''} ${correctLetter === 'D' ? '<strong style="color: #28a745;">(Correct Answer)</strong>' : ''}</span>` : ''}
+                        
+                        <br>
+                        <strong>Result:</strong> ${isCorrect ? '✓ Correct' : '✗ Incorrect'}
                     </div>
                 `;
             }
