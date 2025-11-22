@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinecliff County - Staff Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .header p { font-size: 1em; opacity: 0.9; }
+        .content { padding: 40px; }
+        .info-section {
+            background: #f0f9ff;
+            border-left: 4px solid #56ab2f;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .user-info {
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #56ab2f;
+        }
+        .question-card {
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .question-number {
+            background: #56ab2f;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .category-badge {
+            background: #e1e8ed;
+            color: #666;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+        .question-text {
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            border-color: #56ab2f;
+            background: #f0f9ff;
+        }
+        .option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: normal;
+        }
+        .progress-bar {
+            background: #e1e8ed;
+            height: 8px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #56ab2f 0%, #a8e063 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e1e8ed;
+        }
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(86, 171, 47, 0.4);
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        .loading i {
+            font-size: 2em;
+            animation: spin 1s linear infinite;
+            display: block;
+            margin-bottom: 15px;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .error, .success {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        @media (max-width: 768px) {
+            .content { padding: 20px; }
+            .header h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-tie"></i> Staff Application</h1>
+            <p><i class="fas fa-mountain"></i> Pinecliff County, CO Roleplay</p>
+        </div>
+
+        <div class="content">
+            <div class="info-section">
+                <p><i class="fas fa-info-circle"></i> <strong>Instructions:</strong> Complete all questions honestly. This is a multiple choice assessment to evaluate your knowledge and decision-making skills. You must score <strong>85% or higher</strong> to be considered for a staff position.</p>
+            </div>
+
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading application...</p>
+            </div>
+
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="success" class="success" style="display: none;"></div>
+
+            <form id="applicationForm" style="display: none;">
+                <div class="user-info">
+                    <div class="form-group">
+                        <label for="discordUsername"><i class="fab fa-discord"></i> Discord Username *</label>
+                        <input type="text" id="discordUsername" required placeholder="e.g., username#0000 or @username">
+                    </div>
+                    <div class="form-group">
+                        <label for="steamUsername"><i class="fab fa-steam"></i> Steam Username</label>
+                        <input type="text" id="steamUsername" placeholder="Your Steam username (optional)">
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+
+                <div id="questionsContainer"></div>
+
+                <div class="submit-section">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let questions = [];
+        let startTime = Date.now();
+
+        async function loadQuestions() {
+            try {
+                const { data, error } = await supabase
+                    .from('staff_app')
+                    .select('*')
+                    .order('question_number', { ascending: true });
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    showError('No questions found. Please contact an administrator.');
+                    return;
+                }
+
+                questions = data;
+                renderQuestions();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('applicationForm').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                showError('Failed to load application: ' + error.message);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((question) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                card.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-number"><i class="fas fa-question-circle"></i> Question ${question.question_number}</span>
+                        ${question.category ? `<span class="category-badge">${escapeHtml(question.category)}</span>` : ''}
+                    </div>
+                    <div class="question-text">${escapeHtml(question.question_text)}</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q${question.question_number}_a" name="question_${question.question_number}" value="A" required>
+                            <label for="q${question.question_number}_a">A) ${escapeHtml(question.option_a)}</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.question_number}_b" name="question_${question.question_number}" value="B" required>
+                            <label for="q${question.question_number}_b">B) ${escapeHtml(question.option_b)}</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.question_number}_c" name="question_${question.question_number}" value="C" required>
+                            <label for="q${question.question_number}_c">C) ${escapeHtml(question.option_c)}</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q${question.question_number}_d" name="question_${question.question_number}" value="D" required>
+                            <label for="q${question.question_number}_d">D) ${escapeHtml(question.option_d)}</label>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            trackProgress();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function trackProgress() {
+            const form = document.getElementById('applicationForm');
+            form.addEventListener('change', () => {
+                const answeredQuestions = new Set();
+                
+                questions.forEach(q => {
+                    const answer = form.querySelector(`input[name="question_${q.question_number}"]:checked`);
+                    if (answer) answeredQuestions.add(q.question_number);
+                });
+
+                const progress = (answeredQuestions.size / questions.length) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+            });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.innerHTML = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.innerHTML = message;
+            successDiv.style.display = 'block';
+        }
+
+        document.getElementById('applicationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            const discordUsername = document.getElementById('discordUsername').value;
+            const steamUsername = document.getElementById('steamUsername').value;
+
+            let correctAnswers = 0;
+            const answers = {};
+
+            questions.forEach(question => {
+                const selectedAnswer = document.querySelector(`input[name="question_${question.question_number}"]:checked`)?.value;
+                
+                answers[question.question_number] = {
+                    question: question.question_text,
+                    selected: selectedAnswer,
+                    correct: question.correct_answer,
+                    isCorrect: selectedAnswer === question.correct_answer,
+                    option_a: question.option_a,
+                    option_b: question.option_b,
+                    option_c: question.option_c,
+                    option_d: question.option_d
+                };
+
+                if (selectedAnswer === question.correct_answer) {
+                    correctAnswers++;
+                }
+            });
+
+            const totalQuestions = questions.length;
+            const scorePercentage = (correctAnswers / totalQuestions) * 100;
+            const passed = scorePercentage >= 85;
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
+            try {
+                const { error } = await supabase
+                    .from('staff_responses')
+                    .insert([{
+                        discord_username: discordUsername,
+                        steam_username: steamUsername || null,
+                        total_questions: totalQuestions,
+                        correct_answers: correctAnswers,
+                        score_percentage: scorePercentage.toFixed(2),
+                        passed: passed,
+                        answers: answers,
+                        status: passed ? 'pending' : 'denied',
+                        time_taken_seconds: timeTaken
+                    }]);
+
+                if (error) throw error;
+
+                window.scrollTo(0, 0);
+                document.getElementById('applicationForm').style.display = 'none';
+                
+                const resultMessage = passed 
+                    ? `<i class="fas fa-trophy"></i> <strong>Congratulations!</strong> You scored ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). Your application will be reviewed by our staff team.`
+                    : `<i class="fas fa-times-circle"></i> You scored ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). You need 85% or higher to qualify. Please try again later.`;
+                
+                showSuccess(resultMessage);
+
+            } catch (error) {
+                console.error('Error submitting:', error);
+                showError('<i class="fas fa-exclamation-triangle"></i> Failed to submit application: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            }
+        });
+
+        loadQuestions();
+    </script>
+</body>
+</html>
