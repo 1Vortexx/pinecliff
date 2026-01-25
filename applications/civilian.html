@@ -268,13 +268,13 @@
         const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let questions = [];
         let startTime = Date.now();
 
         async function loadQuestions() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('civilian_app')
                     .select('*')
                     .order('question_number', { ascending: true });
@@ -424,7 +424,7 @@
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('civilian_responses')
                     .insert([{
                         full_name: fullName,
