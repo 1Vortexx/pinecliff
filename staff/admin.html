@@ -649,7 +649,7 @@
         const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentUser = null;
         let handbookData = [];
         let staffAppData = [];
@@ -673,7 +673,7 @@
             loginError.style.display = 'none';
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('logins')
                     .select('*')
                     .eq('username', document.getElementById('username').value)
@@ -682,7 +682,7 @@
 
                 if (error || !data) throw new Error('Invalid credentials');
 
-                await supabase.from('logins').update({ last_login: new Date().toISOString() }).eq('id', data.id);
+                await supabaseClient.from('logins').update({ last_login: new Date().toISOString() }).eq('id', data.id);
 
                 currentUser = data;
                 sessionStorage.setItem('pinecliff_admin', JSON.stringify(data));
@@ -719,7 +719,7 @@
         // HANDBOOK QUIZ FUNCTIONS
         async function loadHandbook() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('responses')
                     .select('*')
                     .order('submitted_at', { ascending: false });
@@ -817,7 +817,7 @@
         // STAFF APPLICATION FUNCTIONS
         async function loadStaffApp() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('staff_responses')
                     .select('*')
                     .order('submitted_at', { ascending: false });
@@ -917,7 +917,7 @@
             if (!confirm(`Are you sure you want to ${status} this application?`)) return;
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('staff_responses')
                     .update({
                         status: status,
@@ -952,7 +952,7 @@
         // CIVILIAN APPLICATION FUNCTIONS
         async function loadCivilianApp() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('civilian_responses')
                     .select('*')
                     .order('submitted_at', { ascending: false });
@@ -1057,7 +1057,7 @@
             if (!confirm(`Are you sure you want to ${status} this application?`)) return;
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('civilian_responses')
                     .update({
                         status: status,
