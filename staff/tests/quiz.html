@@ -250,13 +250,9 @@
 
     <script>
         const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
 
-let supabase;
-if (!window.supabaseClient) {
-    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-supabase = window.supabaseClient;
+        let supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let questions = [];
         let startTime = Date.now();
