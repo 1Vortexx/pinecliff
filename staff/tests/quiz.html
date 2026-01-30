@@ -249,191 +249,193 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
+        (function() {
+            const SUPABASE_URL = 'https://kyrwsuhcljhetjeavrjm.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cndzdWhjbGpoZXRqZWF2cmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NDkyNjMsImV4cCI6MjA3OTMyNTI2M30.JBFSA-cVMV6bKcj86buLqAH7-d_IuwDqrjbJAcJfIA0';
 
-        let supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let questions = [];
-        let startTime = Date.now();
+            let questions = [];
+            let startTime = Date.now();
 
-        async function loadQuestions() {
-            try {
-                const { data, error } = await supabase
-                    .from('survey')
-                    .select('*')
-                    .order('question_number', { ascending: true });
+            async function loadQuestions() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('survey')
+                        .select('*')
+                        .order('question_number', { ascending: true });
 
-                if (error) throw error;
+                    if (error) throw error;
 
-                if (!data || data.length === 0) {
-                    showError('<i class="fas fa-exclamation-triangle"></i> No questions found. Please contact admin.');
-                    return;
+                    if (!data || data.length === 0) {
+                        showError('<i class="fas fa-exclamation-triangle"></i> No questions found. Please contact admin.');
+                        return;
+                    }
+
+                    questions = data;
+                    renderQuestions();
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('surveyForm').style.display = 'block';
+                } catch (error) {
+                    console.error('Error loading questions:', error);
+                    showError('<i class="fas fa-exclamation-triangle"></i> Failed to load: ' + error.message);
+                    document.getElementById('loading').style.display = 'none';
                 }
-
-                questions = data;
-                renderQuestions();
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('surveyForm').style.display = 'block';
-            } catch (error) {
-                console.error('Error loading questions:', error);
-                showError('<i class="fas fa-exclamation-triangle"></i> Failed to load: ' + error.message);
-                document.getElementById('loading').style.display = 'none';
             }
-        }
 
-        function renderQuestions() {
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
+            function renderQuestions() {
+                const container = document.getElementById('questionsContainer');
+                container.innerHTML = '';
 
-            const quizQuestions = questions.filter(q => q.question_type === 'multiple_choice');
-
-            quizQuestions.forEach((question) => {
-                const questionCard = document.createElement('div');
-                questionCard.className = 'question-card';
-                
-                const displayNum = question.question_number - 2;
-                const sectionRef = question.section_reference || 'N/A';
-                
-                questionCard.innerHTML = `
-                    <div class="question-header">
-                        <span class="question-number"><i class="fas fa-question-circle"></i> Question ${displayNum}</span>
-                        <span class="section-ref"><i class="fas fa-book"></i> ${sectionRef}</span>
-                    </div>
-                    <div class="question-text">${escapeHtml(question.question_text)}</div>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" id="q${question.question_number}_a" name="question_${question.question_number}" value="A" required>
-                            <label for="q${question.question_number}_a">A) ${escapeHtml(question.option_a)}</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="q${question.question_number}_b" name="question_${question.question_number}" value="B" required>
-                            <label for="q${question.question_number}_b">B) ${escapeHtml(question.option_b)}</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="q${question.question_number}_c" name="question_${question.question_number}" value="C" required>
-                            <label for="q${question.question_number}_c">C) ${escapeHtml(question.option_c)}</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="q${question.question_number}_d" name="question_${question.question_number}" value="D" required>
-                            <label for="q${question.question_number}_d">D) ${escapeHtml(question.option_d)}</label>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(questionCard);
-            });
-
-            trackProgress();
-        }
-
-        function escapeHtml(text) {
-            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
-            return String(text).replace(/[&<>"']/g, m => map[m]);
-        }
-
-        function trackProgress() {
-            const form = document.getElementById('surveyForm');
-            form.addEventListener('change', () => {
                 const quizQuestions = questions.filter(q => q.question_type === 'multiple_choice');
-                const answeredQuestions = new Set();
-                
-                quizQuestions.forEach(q => {
-                    const answer = form.querySelector(`input[name="question_${q.question_number}"]:checked`);
-                    if (answer) answeredQuestions.add(q.question_number);
+
+                quizQuestions.forEach((question) => {
+                    const questionCard = document.createElement('div');
+                    questionCard.className = 'question-card';
+                    
+                    const displayNum = question.question_number - 2;
+                    const sectionRef = question.section_reference || 'N/A';
+                    
+                    questionCard.innerHTML = `
+                        <div class="question-header">
+                            <span class="question-number"><i class="fas fa-question-circle"></i> Question ${displayNum}</span>
+                            <span class="section-ref"><i class="fas fa-book"></i> ${sectionRef}</span>
+                        </div>
+                        <div class="question-text">${escapeHtml(question.question_text)}</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q${question.question_number}_a" name="question_${question.question_number}" value="A" required>
+                                <label for="q${question.question_number}_a">A) ${escapeHtml(question.option_a)}</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q${question.question_number}_b" name="question_${question.question_number}" value="B" required>
+                                <label for="q${question.question_number}_b">B) ${escapeHtml(question.option_b)}</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q${question.question_number}_c" name="question_${question.question_number}" value="C" required>
+                                <label for="q${question.question_number}_c">C) ${escapeHtml(question.option_c)}</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q${question.question_number}_d" name="question_${question.question_number}" value="D" required>
+                                <label for="q${question.question_number}_d">D) ${escapeHtml(question.option_d)}</label>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(questionCard);
                 });
 
-                const progress = (answeredQuestions.size / quizQuestions.length) * 100;
-                document.getElementById('progressFill').style.width = progress + '%';
-            });
-        }
+                trackProgress();
+            }
 
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.innerHTML = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
+            function escapeHtml(text) {
+                const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+                return String(text).replace(/[&<>"']/g, m => map[m]);
+            }
 
-        function showSuccess(message) {
-            const successDiv = document.getElementById('success');
-            successDiv.innerHTML = message;
-            successDiv.style.display = 'block';
-        }
+            function trackProgress() {
+                const form = document.getElementById('surveyForm');
+                form.addEventListener('change', () => {
+                    const quizQuestions = questions.filter(q => q.question_type === 'multiple_choice');
+                    const answeredQuestions = new Set();
+                    
+                    quizQuestions.forEach(q => {
+                        const answer = form.querySelector(`input[name="question_${q.question_number}"]:checked`);
+                        if (answer) answeredQuestions.add(q.question_number);
+                    });
 
-        document.getElementById('surveyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+                    const progress = (answeredQuestions.size / quizQuestions.length) * 100;
+                    document.getElementById('progressFill').style.width = progress + '%';
+                });
+            }
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            function showError(message) {
+                const errorDiv = document.getElementById('error');
+                errorDiv.innerHTML = message;
+                errorDiv.style.display = 'block';
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
 
-            const formData = new FormData(e.target);
-            const discordUsername = formData.get('discordUsername');
-            const discordId = formData.get('discordId');
+            function showSuccess(message) {
+                const successDiv = document.getElementById('success');
+                successDiv.innerHTML = message;
+                successDiv.style.display = 'block';
+            }
 
-            const quizQuestions = questions.filter(q => q.question_type === 'multiple_choice');
-            let correctAnswers = 0;
-            const answers = {};
+            document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            quizQuestions.forEach(question => {
-                const selectedAnswer = formData.get(`question_${question.question_number}`);
-                answers[question.question_number] = {
-                    question: question.question_text,
-                    selected: selectedAnswer,
-                    correct: question.correct_answer,
-                    isCorrect: selectedAnswer === question.correct_answer,
-                    option_a: question.option_a,
-                    option_b: question.option_b,
-                    option_c: question.option_c,
-                    option_d: question.option_d
-                };
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
-                if (selectedAnswer === question.correct_answer) {
-                    correctAnswers++;
+                const formData = new FormData(e.target);
+                const discordUsername = formData.get('discordUsername');
+                const discordId = formData.get('discordId');
+
+                const quizQuestions = questions.filter(q => q.question_type === 'multiple_choice');
+                let correctAnswers = 0;
+                const answers = {};
+
+                quizQuestions.forEach(question => {
+                    const selectedAnswer = formData.get(`question_${question.question_number}`);
+                    answers[question.question_number] = {
+                        question: question.question_text,
+                        selected: selectedAnswer,
+                        correct: question.correct_answer,
+                        isCorrect: selectedAnswer === question.correct_answer,
+                        option_a: question.option_a,
+                        option_b: question.option_b,
+                        option_c: question.option_c,
+                        option_d: question.option_d
+                    };
+
+                    if (selectedAnswer === question.correct_answer) {
+                        correctAnswers++;
+                    }
+                });
+
+                const totalQuestions = quizQuestions.length;
+                const scorePercentage = (correctAnswers / totalQuestions) * 100;
+                const passed = scorePercentage >= 85;
+                const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('responses')
+                        .insert([{
+                            respondent_name: discordUsername,
+                            respondent_email: discordId,
+                            total_questions: totalQuestions,
+                            correct_answers: correctAnswers,
+                            score_percentage: scorePercentage.toFixed(2),
+                            passed: passed,
+                            answers: answers,
+                            time_taken_seconds: timeTaken
+                        }]);
+
+                    if (error) throw error;
+
+                    window.scrollTo(0, 0);
+                    document.getElementById('surveyForm').style.display = 'none';
+                    
+                    const resultMessage = passed 
+                        ? `<i class="fas fa-trophy"></i> Congratulations! You passed with ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). Your results have been submitted.`
+                        : `<i class="fas fa-times-circle"></i> You scored ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). You need 85% to pass. Please review the handbook and try again.`;
+                    
+                    showSuccess(resultMessage);
+
+                } catch (error) {
+                    console.error('Error submitting:', error);
+                    showError('<i class="fas fa-exclamation-triangle"></i> Failed to submit: ' + error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Quiz';
                 }
             });
 
-            const totalQuestions = quizQuestions.length;
-            const scorePercentage = (correctAnswers / totalQuestions) * 100;
-            const passed = scorePercentage >= 85;
-            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
-
-            try {
-                const { data, error } = await supabase
-                    .from('responses')
-                    .insert([{
-                        respondent_name: discordUsername,
-                        respondent_email: discordId,
-                        total_questions: totalQuestions,
-                        correct_answers: correctAnswers,
-                        score_percentage: scorePercentage.toFixed(2),
-                        passed: passed,
-                        answers: answers,
-                        time_taken_seconds: timeTaken
-                    }]);
-
-                if (error) throw error;
-
-                window.scrollTo(0, 0);
-                document.getElementById('surveyForm').style.display = 'none';
-                
-                const resultMessage = passed 
-                    ? `<i class="fas fa-trophy"></i> Congratulations! You passed with ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). Your results have been submitted.`
-                    : `<i class="fas fa-times-circle"></i> You scored ${scorePercentage.toFixed(1)}% (${correctAnswers}/${totalQuestions} correct). You need 85% to pass. Please review the handbook and try again.`;
-                
-                showSuccess(resultMessage);
-
-            } catch (error) {
-                console.error('Error submitting:', error);
-                showError('<i class="fas fa-exclamation-triangle"></i> Failed to submit: ' + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Quiz';
-            }
-        });
-
-        loadQuestions();
+            loadQuestions();
+        })();
     </script>
 </body>
 </html>
